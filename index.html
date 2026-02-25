@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ward 1 Spending Pattern · Case Study 01 — College Park, GA</title>
+<style>
+  :root {
+    --bg: #f9fafb; --surface: #ffffff; --surface2: #f3f4f6;
+    --border: #e5e7eb; --border2: #d1d5db;
+    --red: #dc2626; --red-bg: #fef2f2; --red-border: #fecaca;
+    --blue: #1e40af; --blue-light: #dbeafe;
+    --green: #15803d; --green-light: #dcfce7;
+    --text: #111827; --text2: #4b5563; --text3: #9ca3af;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  /* ── BANNER ── */
+  .top-bar { background: #111827; color: #9ca3af; text-align: center; padding: 9px 20px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ── HEADER ── */
+  .page-header { background: white; border-bottom: 1px solid var(--border); padding: 48px 24px 44px; text-align: center; }
+  .series-label { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--blue); background: var(--blue-light); padding: 4px 14px; border-radius: 12px; margin-bottom: 14px; }
+  .page-header h1 { font-size: 2.2rem; font-weight: 900; color: var(--text); line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 10px; }
+  .page-header h1 .red { color: var(--red); }
+  .header-sub { font-size: 0.92rem; color: var(--text2); max-width: 640px; margin: 0 auto; }
+
+  /* ── CONTAINER ── */
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 20px; }
+
+  /* ── SECTION TITLES ── */
+  .sec-title { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text3); margin: 52px 0 18px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+  .sec-title:first-child { margin-top: 36px; }
+
+  /* ── WHO CONTROLS THE MONEY ── */
+  .control-graphic { background: white; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 16px; }
+  .control-top { padding: 28px 24px 20px; text-align: center; border-bottom: 1px solid var(--border); background: var(--surface2); }
+  .control-photo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border2); margin-bottom: 10px; }
+  .control-top .q { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); margin-bottom: 6px; }
+  .control-person { font-size: 1.5rem; font-weight: 900; color: var(--text); }
+  .control-role { font-size: 0.82rem; color: var(--text2); margin-top: 2px; }
+  .control-note { font-size: 0.78rem; color: var(--text2); margin-top: 10px; max-width: 560px; margin-left: auto; margin-right: auto; font-style: italic; }
+  .control-branches { display: grid; grid-template-columns: 1fr 1fr; }
+  .control-branch { padding: 24px; }
+  .control-branch:first-child { border-right: 1px solid var(--border); }
+  .cb-arrow { text-align: center; color: var(--text3); font-size: 0.75rem; margin-bottom: 10px; }
+  .cb-arrow span { color: var(--red); font-weight: 800; font-size: 0.85rem; }
+  .cb-org { font-size: 0.92rem; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+  .cb-id { font-size: 0.68rem; color: var(--text3); margin-bottom: 10px; }
+  .cb-stat { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+  .cb-stat:last-child { border-bottom: none; }
+  .cb-stat .k { color: var(--text2); }
+  .cb-stat .v { font-weight: 800; color: var(--text); }
+  .cb-stat .v.red { color: var(--red); }
+  .control-total { padding: 16px 24px; text-align: center; background: var(--red-bg); border-top: 2px solid var(--red); }
+  .control-total .amount { font-size: 1.5rem; font-weight: 900; color: var(--red); }
+  .control-total .desc { font-size: 0.75rem; color: var(--text2); margin-top: 2px; }
+
+  /* ── TIMELINE ── */
+  .timeline-box { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 20px 16px; box-shadow: var(--shadow); margin-bottom: 12px; }
+  .tl-subtitle { font-size: 0.75rem; color: var(--text3); font-weight: 600; margin-bottom: 18px; }
+  .tl-chart { display: flex; align-items: flex-end; gap: 4px; height: 220px; padding-bottom: 46px; position: relative; }
+  .tl-group { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; height: 100%; justify-content: flex-end; }
+  .tl-bar { border-radius: 5px 5px 0 0; width: 65%; max-width: 44px; }
+  .tl-group { cursor: pointer; }
+  .tl-group:hover .tl-bar { opacity: 0.8; }
+  .tl-group.active .tl-bar { opacity: 0.85; box-shadow: 0 0 0 2px var(--text); }
+
+  /* ── TIMELINE DETAIL PANEL ── */
+  .tl-detail { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); margin-top: 16px; padding: 16px 18px; display: none; animation: fadeIn 0.15s ease; }
+  .tl-detail.open { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+  .tl-detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .tl-detail-header h3 { font-size: 0.88rem; font-weight: 800; color: var(--text); }
+  .tl-detail-close { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 2px 10px; font-size: 0.72rem; color: var(--text2); cursor: pointer; font-weight: 700; }
+  .tl-detail-close:hover { background: white; color: var(--text); }
+  .tl-detail-row { display: grid; grid-template-columns: 1fr auto; padding: 10px 12px; background: white; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 6px; }
+  .tl-detail-row:last-child { margin-bottom: 0; }
+  .tl-detail-desc { font-weight: 700; font-size: 0.82rem; color: var(--text); }
+  .tl-detail-entity { font-size: 0.68rem; color: var(--text3); margin-top: 2px; }
+  .tl-detail-amt { font-weight: 900; color: var(--red); font-size: 0.88rem; text-align: right; font-variant-numeric: tabular-nums; }
+  .tl-detail-total { text-align: right; font-size: 0.78rem; color: var(--text2); margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); }
+  .tl-detail-total strong { color: var(--red); }
+  .tl-detail-none { font-size: 0.8rem; color: var(--text3); text-align: center; padding: 8px; }
+  .tl-label { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.62rem; font-weight: 800; color: var(--text); white-space: nowrap; }
+  .tl-month { font-size: 0.66rem; color: var(--text3); font-weight: 600; position: absolute; bottom: 22px; }
+  .tl-year { font-size: 0.58rem; color: var(--text3); position: absolute; bottom: 8px; }
+  .tl-legend { display: flex; gap: 20px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+  .tl-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text2); }
+  .tl-legend-dot { width: 11px; height: 11px; border-radius: 3px; }
+
+  /* ── RECURRING INSTALLMENTS ── */
+  .inst-stack { margin-bottom: 12px; }
+  .inst-fy { padding: 6px 18px; background: var(--surface2); border: 1px solid var(--border); font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); }
+  .inst-fy:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+  .inst-fy .flagged { color: var(--red); }
+  .inst-row { display: grid; grid-template-columns: 110px 1fr auto; align-items: center; padding: 12px 18px; background: white; border: 1px solid var(--border); border-top: none; font-size: 0.85rem; }
+  .inst-date { font-weight: 700; color: var(--text2); font-size: 0.8rem; }
+  .inst-desc { color: var(--text); font-weight: 600; font-size: 0.85rem; }
+  .inst-amount { font-weight: 900; color: var(--red); text-align: right; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+  .inst-footer { padding: 14px 18px; background: var(--red-bg); border: 1.5px solid var(--red-border); border-radius: 0 0 var(--radius) var(--radius); font-size: 0.8rem; color: var(--text2); }
+  .inst-footer strong { color: var(--red); }
+
+  /* ── TAGS ── */
+  .tag { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-right: 3px; margin-top: 4px; }
+  .tag-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .tag-gray { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
+
+  /* ── TABLE / COLLAPSIBLE ── */
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .pill { padding: 4px 12px; border-radius: 14px; border: 1.5px solid var(--border); background: white; color: var(--text2); font-size: 0.73rem; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+  .pill.active { background: var(--text); color: white; border-color: var(--text); }
+  .pill:hover:not(.active) { border-color: var(--text); color: var(--text); }
+  .collapsible { margin-bottom: 10px; }
+  .col-header { display: flex; justify-content: space-between; align-items: center; padding: 13px 18px; background: white; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; user-select: none; box-shadow: var(--shadow); }
+  .col-header.open { border-radius: var(--radius) var(--radius) 0 0; border-bottom-color: transparent; }
+  .col-header .title { font-weight: 700; font-size: 0.85rem; }
+  .col-header .arrow { font-size: 0.78rem; color: var(--text3); transition: transform 0.2s; }
+  .col-header.open .arrow { transform: rotate(180deg); }
+  .col-body { display: none; background: white; border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); overflow-x: auto; }
+  .col-body.open { display: block; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; padding: 8px 14px; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text3); border-bottom: 1px solid var(--border); font-weight: 700; background: var(--surface2); }
+  td { padding: 12px 14px; font-size: 0.8rem; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafbfc; }
+  .td-desc { font-weight: 700; color: var(--text); font-size: 0.82rem; margin-bottom: 1px; }
+  .td-context { font-size: 0.72rem; color: var(--text2); font-style: italic; margin-top: 3px; line-height: 1.4; }
+  .td-entity { font-size: 0.66rem; color: var(--text3); margin-top: 3px; }
+  .amt { text-align: right; font-weight: 900; color: var(--red); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .ward-badge { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 0.66rem; font-weight: 700; }
+  .ward-badge.w1 { background: #dbeafe; color: #1e40af; }
+  .ward-badge.w3 { background: #ffedd5; color: #c2410c; }
+  .ward-badge.city { background: #f3e8ff; color: #7c3aed; }
+  .ward-badge.hosp { background: #dcfce7; color: #15803d; }
+  .source-note { font-size: 0.7rem; color: var(--text3); text-align: right; margin-top: 8px; }
+
+  /* ── INTERACTION HINTS ── */
+  .interact-hint { display: inline-flex; align-items: center; gap: 5px; font-size: 0.68rem; color: var(--text3); font-style: italic; font-weight: 600; }
+  .interact-hint .hint-icon { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); font-size: 0.55rem; font-style: normal; color: var(--text2); flex-shrink: 0; }
+
+  /* ── FOOTER ── */
+  .page-footer { text-align: center; padding: 36px 20px; color: var(--text3); font-size: 0.75rem; border-top: 1px solid var(--border); margin-top: 60px; background: white; }
+  .page-footer strong { color: var(--text); }
+
+  @media(max-width:680px) {
+    .page-header h1 { font-size: 1.6rem; }
+    .control-branches { grid-template-columns: 1fr; }
+    .control-branch:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    .inst-row { grid-template-columns: 90px 1fr auto; padding: 10px 14px; }
+    .tl-chart { height: 170px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">College Park, Georgia · Public Spending Records</div>
+
+<!-- ── HEADER ── -->
+<div class="page-header">
+  <div class="series-label">Ward 1 Spending Pattern · Case Study 01</div>
+  <h1>One Person. Two Organizations.<br><span class="red">$226,936.</span></h1>
+  <div class="header-sub">City records show recurring Ward 1 and city funds directed through multiple entities connected to the same person — Karen Jeremy, who controls both Destination College Park and the College Park Historical Society.</div>
+</div>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════════════════════════
+     1. WHO CONTROLS THE MONEY
+     ══════════════════════════════════════════════════ -->
+<div class="sec-title">Who Controls the Money?</div>
+
+<div class="control-graphic">
+  <div class="control-top">
+    <img class="control-photo" src="data:image/jpeg;base64,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" alt="Councilwoman Jamelle McKenzie">
+    <div class="q">Directing the Funds</div>
+    <div class="control-person">Councilwoman Jamelle McKenzie</div>
+    <div class="control-role">Ward 1 · College Park City Council</div>
+    <div class="control-note">7 of 10 invoices totaling $83,500 flow directly from Ward 1 funds under Councilwoman McKenzie's control. The remaining $143,436 flows through city-wide and hospitality accounts.</div>
+  </div>
+
+  <div class="control-branches">
+    <div class="control-branch">
+      <div class="cb-arrow">Funds paid to <span>↓</span></div>
+      <div class="cb-org">Destination College Park</div>
+      <div class="cb-id">Vendor #15413 · Controlled by Karen Jeremy</div>
+      <div class="cb-stat"><span class="k">Total Paid</span><span class="v red">$98,436</span></div>
+      <div class="cb-stat"><span class="k">Invoices</span><span class="v">8</span></div>
+      <div class="cb-stat"><span class="k">Timespan</span><span class="v">Mar 2025 – Jan 2026</span></div>
+      <div class="cb-stat"><span class="k">Primary Source</span><span class="v">Ward 1 Funds</span></div>
+    </div>
+
+    <div class="control-branch">
+      <div class="cb-arrow">Funds paid to <span>↓</span></div>
+      <div class="cb-org">College Park Historical Society</div>
+      <div class="cb-id">Vendor #6409 · Karen Jeremy, President</div>
+      <div class="cb-stat"><span class="k">Total Paid</span><span class="v red">$128,500</span></div>
+      <div class="cb-stat"><span class="k">Invoices</span><span class="v">2</span></div>
+      <div class="cb-stat"><span class="k">Timespan</span><span class="v">Dec 2025 – Jan 2026</span></div>
+      <div class="cb-stat"><span class="k">Largest Single</span><span class="v red">$125,000</span></div>
+    </div>
+  </div>
+
+  <div class="control-total">
+    <div class="amount">$226,936</div>
+    <div class="desc">Total paid to entities controlled by Karen Jeremy · 10 invoices across 2 fiscal years</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     2. PAYMENT TIMELINE
+     ══════════════════════════════════════════════════ -->
+<div class="sec-title">Payment Timeline <span class="interact-hint" style="float:right;text-transform:none;letter-spacing:0;font-size:0.68rem"><span class="hint-icon">&#9756;</span> Click any month bar for invoice details</span></div>
+
+<div class="timeline-box">
+  <div class="tl-subtitle">Monthly payment activity — March 2025 through January 2026</div>
+  <div class="tl-chart" id="tlChart"></div>
+  <div class="tl-legend">
+    <div class="tl-legend-item"><div class="tl-legend-dot" style="background:#1e40af"></div> Destination College Park</div>
+    <div class="tl-legend-item"><div class="tl-legend-dot" style="background:#15803d"></div> College Park Historical Society</div>
+  </div>
+  <div class="tl-detail" id="tlDetail"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     3. RECURRING INSTALLMENTS
+     ══════════════════════════════════════════════════ -->
+<div class="sec-title">Recurring Installments — "Ward 1 Community Enhancement Initiative" <span class="interact-hint" style="float:right;text-transform:none;letter-spacing:0;font-size:0.68rem"><span class="hint-icon" style="background:var(--red-bg);border-color:var(--red-border);color:var(--red)">!</span> Red tags indicate flagged patterns</span></div>
+
+<div class="inst-stack">
+  <div class="inst-fy">Fiscal Year 2025</div>
+  <div class="inst-row">
+    <div class="inst-date">May 19, 2025</div>
+    <div class="inst-desc">Ward 1 Community Enhancement Initiative <div><span class="tag tag-red">No Scope Defined</span><span class="tag tag-gray">Charged to Different Account</span></div></div>
+    <div class="inst-amount">$40,000</div>
+  </div>
+  <div class="inst-row">
+    <div class="inst-date">Aug 1, 2025</div>
+    <div class="inst-desc">2nd Installment — Ward 1 Enhancement <div><span class="tag tag-red">Installment Payment</span><span class="tag tag-gray">Charged to Different Account</span></div></div>
+    <div class="inst-amount">$10,000</div>
+  </div>
+
+  <div class="inst-fy">Fiscal Year 2026 — <span class="flagged">Cycle Restarts</span></div>
+  <div class="inst-row">
+    <div class="inst-date">Sep 25, 2025</div>
+    <div class="inst-desc">2nd Installment — Ward 1 Enhancement (FY26) <div><span class="tag tag-red">Restarted Fiscal Cycle</span><span class="tag tag-red">Installment Payment</span></div></div>
+    <div class="inst-amount">$10,000</div>
+  </div>
+  <div class="inst-row">
+    <div class="inst-date">Dec 1, 2025</div>
+    <div class="inst-desc">3rd Installment — Ward 1 Enhancement <div><span class="tag tag-red">Installment Payment</span></div></div>
+    <div class="inst-amount">$10,000</div>
+  </div>
+  <div class="inst-row">
+    <div class="inst-date">Dec 12, 2025</div>
+    <div class="inst-desc">4th Installment — Ward 1 Enhancement <div><span class="tag tag-red">Installment Payment</span></div></div>
+    <div class="inst-amount">$10,000</div>
+  </div>
+  <div class="inst-footer">
+    <strong>$80,000</strong> across 5 installment payments over 2 fiscal years — all for the same initiative, all to Destination College Park, all from Ward 1 funds under Councilwoman McKenzie's control. The installment numbering restarted in FY26 with a new purchase order.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     4. SOURCE DOCUMENTATION — Invoices
+     ══════════════════════════════════════════════════ -->
+<div class="sec-title">Source Documentation — All Invoices <span class="interact-hint" style="float:right;text-transform:none;letter-spacing:0;font-size:0.68rem"><span class="hint-icon">&#9756;</span> Filter by category, then expand tables below</span></div>
+
+<div class="filter-row">
+  <button class="pill active" onclick="filterTable('all',this)">All Payments</button>
+  <button class="pill" onclick="filterTable('ward1',this)">Ward 1 Funds</button>
+  <button class="pill" onclick="filterTable('hosp',this)">Hospitality Funds</button>
+  <button class="pill" onclick="filterTable('installment',this)">Installment Payments</button>
+</div>
+
+<!-- Destination College Park -->
+<div class="collapsible">
+  <div class="col-header" onclick="toggle(this)">
+    <span class="title">Destination College Park — 8 invoices · $98,436</span>
+    <span style="display:flex;align-items:center;gap:8px"><span style="font-size:0.62rem;color:var(--text3);font-weight:600">Click to expand</span><span class="arrow">▼</span></span>
+  </div>
+  <div class="col-body" id="dcp-body">
+    <table><thead><tr><th>Date Paid</th><th>Description &amp; Flags</th><th>Source</th><th class="amt">Amount</th></tr></thead>
+    <tbody id="dcpRows"></tbody></table>
+  </div>
+</div>
+
+<!-- Historical Society -->
+<div class="collapsible">
+  <div class="col-header" onclick="toggle(this)">
+    <span class="title">College Park Historical Society — 2 invoices · $128,500</span>
+    <span style="display:flex;align-items:center;gap:8px"><span style="font-size:0.62rem;color:var(--text3);font-weight:600">Click to expand</span><span class="arrow">▼</span></span>
+  </div>
+  <div class="col-body" id="hist-body">
+    <table><thead><tr><th>Date Paid</th><th>Description &amp; Flags</th><th>Source</th><th class="amt">Amount</th></tr></thead>
+    <tbody id="histRows"></tbody></table>
+  </div>
+</div>
+
+<div class="source-note">Source: City of College Park Accounts Payable Invoice Reports · Obtained via open records request</div>
+
+<!-- ── FOOTER ── -->
+<div class="page-footer">
+  <strong>Ward 1 Spending Pattern · Case Study 01</strong><br>
+  Data sourced from City of College Park official Accounts Payable Invoice Reports<br>
+  Part 1 of a continuing series
+</div>
+
+</div>
+
+<script>
+const INVOICES = [
+  {
+    date:'2025-03-07', desc:'Business Services — Destination College Park',
+    context:'No deliverables or scope listed. Charged to executive City Wide Events account.',
+    tags:['No Scope Defined','Charged to Different Account'],
+    entity:'dcp', fund:'City Wide Events', ward:"Mayor's Office", badge:'city', fy:'FY25', amount:9500, inst:false
+  },
+  {
+    date:'2025-05-19', desc:'Ward 1 Community Enhancement Engagement Initiative',
+    context:'$40,000 lump sum. Coded to Multi-Departmental Miscellaneous Services rather than the Ward 1 account. No itemized deliverables.',
+    tags:['No Scope Defined','Charged to Different Account'],
+    entity:'dcp', fund:'Ward 1 · Misc Services', ward:'Ward 1', badge:'w1', fy:'FY25', amount:40000, inst:true
+  },
+  {
+    date:'2025-08-01', desc:'2nd Installment — Ward 1 Community Enhancement',
+    context:'Second payment in a recurring series. Also coded to Miscellaneous Services rather than Ward 1 fund.',
+    tags:['Installment Payment','Charged to Different Account'],
+    entity:'dcp', fund:'Ward 1 · Misc Services', ward:'Ward 1', badge:'w1', fy:'FY25', amount:10000, inst:true
+  },
+  {
+    date:'2025-09-25', desc:'2nd Installment — Ward 1 Community Enhancement (FY26)',
+    context:'Numbering restarts at "2nd" under a new PO in the new fiscal year. Same vendor, same initiative.',
+    tags:['Restarted Fiscal Cycle','Installment Payment'],
+    entity:'dcp', fund:'Ward 1 Non-Capital', ward:'Ward 1', badge:'w1', fy:'FY26', amount:10000, inst:true
+  },
+  {
+    date:'2025-12-01', desc:'3rd Installment — Ward 1 Community Enhancement',
+    context:'Sixth total payment to this vendor. Monthly cadence continues.',
+    tags:['Installment Payment'],
+    entity:'dcp', fund:'Ward 1 Non-Capital', ward:'Ward 1', badge:'w1', fy:'FY26', amount:10000, inst:true
+  },
+  {
+    date:'2025-12-05', desc:'Bank Charges',
+    context:'$36 bank processing fee billed back to the city through the same vendor account.',
+    tags:[],
+    entity:'dcp', fund:'Accounting', ward:'Accounting', badge:'city', fy:'FY26', amount:36, inst:false
+  },
+  {
+    date:'2025-12-12', desc:'4th Installment — Ward 1 Community Enhancement',
+    context:'Two payments to this vendor in December alone.',
+    tags:['Installment Payment'],
+    entity:'dcp', fund:'Ward 1 Non-Capital', ward:'Ward 1', badge:'w1', fy:'FY26', amount:10000, inst:true
+  },
+  {
+    date:'2026-01-16', desc:'Ward 3 December Holiday Events for 2025',
+    context:'Only non-Ward 1 payment. Charged to Ward 3 funds — Council Member Tracie Arnold.',
+    tags:[],
+    entity:'dcp', fund:'Ward 3 Non-Capital', ward:'Ward 3', badge:'w3', fy:'FY26', amount:8900, inst:false
+  },
+  {
+    date:'2026-01-30', desc:'Ward 1 Recognition Event and Advertising',
+    context:'First payment under the Historical Society entity — also controlled by Karen Jeremy.',
+    tags:[],
+    entity:'hist', fund:'Ward 1 Non-Capital', ward:'Ward 1', badge:'w1', fy:'FY26', amount:3500, inst:false
+  },
+  {
+    date:'2026-01-30', desc:'Historic Preservation / Community Engagement / Advocacy & Support',
+    context:'Largest payment: $125,000 from the Hospitality Fund. Three broad categories, no itemization. Same check (#250948) as the $3,500 invoice.',
+    tags:['No Itemization','No Scope Defined'],
+    entity:'hist', fund:'Hospitality Fund · Capital', ward:'Hospitality Fund', badge:'hosp', fy:'FY26', amount:125000, inst:false
+  },
+];
+
+const fmt = v => '$' + v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+
+// ── TIMELINE ──────────────────────────────────────
+let activeMonth = null;
+
+function buildTimeline() {
+  const months = [];
+  const s = new Date(2025,2,1), e = new Date(2026,0,1);
+  for (let d = new Date(s); d <= e; d.setMonth(d.getMonth()+1))
+    months.push({key:d.toISOString().slice(0,7), lbl:d.toLocaleString('en',{month:'short'}), yr:d.getFullYear()});
+
+  const byM = {};
+  months.forEach(m => byM[m.key] = {dcp:0, hist:0});
+  INVOICES.forEach(r => {
+    const mk = r.date.slice(0,7);
+    if (byM[mk] !== undefined) {
+      if (r.entity === 'hist') byM[mk].hist += r.amount;
+      else byM[mk].dcp += r.amount;
+    }
+  });
+  const max = Math.max(...months.map(m => byM[m.key].dcp + byM[m.key].hist));
+  const H = 170;
+
+  document.getElementById('tlChart').innerHTML = months.map(m => {
+    const d = byM[m.key], tot = d.dcp + d.hist;
+    const dH = d.dcp > 0 ? Math.max(3, d.dcp / max * H) : 0;
+    const hH = d.hist > 0 ? Math.max(3, d.hist / max * H) : 0;
+    return `<div class="tl-group" data-month="${m.key}" onclick="showMonthDetail('${m.key}',this)">
+      ${tot > 0 ? `<div class="tl-label">${fmt(tot)}</div>` : ''}
+      ${hH > 0 ? `<div class="tl-bar" style="height:${hH}px;background:#15803d"></div>` : ''}
+      ${dH > 0 ? `<div class="tl-bar" style="height:${dH}px;background:#1e40af"></div>` : ''}
+      ${tot === 0 ? `<div style="height:2px;width:60%;background:#e5e7eb;border-radius:2px"></div>` : ''}
+      <span class="tl-month">${m.lbl}</span>
+      <span class="tl-year">${m.yr}</span>
+    </div>`;
+  }).join('');
+}
+
+function showMonthDetail(monthKey, el) {
+  const panel = document.getElementById('tlDetail');
+
+  // Toggle off if clicking the same month
+  if (activeMonth === monthKey) {
+    closeMonthDetail();
+    return;
+  }
+
+  // Clear previous active state
+  document.querySelectorAll('.tl-group.active').forEach(g => g.classList.remove('active'));
+  el.classList.add('active');
+  activeMonth = monthKey;
+
+  // Find invoices paid this month
+  const matched = INVOICES.filter(r => r.date.slice(0,7) === monthKey);
+  const d = new Date(monthKey + '-15');
+  const label = d.toLocaleString('en',{month:'long', year:'numeric'});
+
+  if (matched.length === 0) {
+    panel.innerHTML = `<div class="tl-detail-header"><h3>${label}</h3><button class="tl-detail-close" onclick="closeMonthDetail()">Close</button></div><div class="tl-detail-none">No invoices cleared this month</div>`;
+  } else {
+    const total = matched.reduce((s,r) => s + r.amount, 0);
+    const entityName = e => e === 'hist' ? 'College Park Historical Society' : 'Destination College Park';
+    panel.innerHTML = `
+      <div class="tl-detail-header"><h3>${label} — ${matched.length} invoice${matched.length > 1 ? 's' : ''}</h3><button class="tl-detail-close" onclick="closeMonthDetail()">Close</button></div>
+      ${matched.map(r => `<div class="tl-detail-row">
+        <div><div class="tl-detail-desc">${r.desc}</div><div class="tl-detail-entity">${entityName(r.entity)} · ${r.fund}${r.tags.length ? ' · ' + r.tags.join(', ') : ''}</div></div>
+        <div class="tl-detail-amt">${fmt(r.amount)}</div>
+      </div>`).join('')}
+      <div class="tl-detail-total">${matched.length} invoice${matched.length > 1 ? 's' : ''} · <strong>${fmt(total)}</strong></div>
+    `;
+  }
+
+  panel.classList.add('open');
+}
+
+function closeMonthDetail() {
+  document.querySelectorAll('.tl-group.active').forEach(g => g.classList.remove('active'));
+  document.getElementById('tlDetail').classList.remove('open');
+  activeMonth = null;
+}
+
+// ── TABLES ────────────────────────────────────────
+let currentFilter = 'all';
+
+function tagHTML(tags) {
+  return tags.map(t => {
+    const c = ['No Scope Defined','Restarted Fiscal Cycle','No Itemization','Installment Payment'].includes(t) ? 'tag-red' : 'tag-gray';
+    return `<span class="tag ${c}">${t}</span>`;
+  }).join('');
+}
+
+function row(r) {
+  return `<tr>
+    <td style="white-space:nowrap;font-size:0.76rem;color:var(--text3)">${r.date}<br><span style="font-size:0.64rem">${r.fy}</span></td>
+    <td>
+      <div class="td-desc">${r.desc}</div>
+      ${r.tags.length ? '<div>'+tagHTML(r.tags)+'</div>' : ''}
+      <div class="td-context">${r.context}</div>
+    </td>
+    <td><span class="ward-badge ${r.badge}">${r.ward}</span><div style="font-size:0.66rem;color:var(--text3);margin-top:3px">${r.fund}</div></td>
+    <td class="amt">${fmt(r.amount)}</td>
+  </tr>`;
+}
+
+function apply(rows) {
+  if (currentFilter === 'ward1') return rows.filter(r => r.ward === 'Ward 1');
+  if (currentFilter === 'hosp') return rows.filter(r => r.badge === 'hosp');
+  if (currentFilter === 'installment') return rows.filter(r => r.inst);
+  return rows;
+}
+
+function renderTables() {
+  const empty = '<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:18px">No matching invoices</td></tr>';
+  const d = apply(INVOICES.filter(r => r.entity === 'dcp'));
+  const h = apply(INVOICES.filter(r => r.entity === 'hist'));
+  document.getElementById('dcpRows').innerHTML = d.length ? d.map(row).join('') : empty;
+  document.getElementById('histRows').innerHTML = h.length ? h.map(row).join('') : empty;
+}
+
+function filterTable(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderTables();
+}
+
+function toggle(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+  const hint = el.querySelector('span span');
+  if (hint && hint.textContent.includes('Click to')) {
+    hint.textContent = el.classList.contains('open') ? 'Click to collapse' : 'Click to expand';
+  }
+}
+
+buildTimeline();
+renderTables();
+</script>
+</body>
+</html>
