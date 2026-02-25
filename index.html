@@ -226,48 +226,9 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════
-     3. RECURRING INSTALLMENTS
+     3. SOURCE DOCUMENTATION — Invoices
      ══════════════════════════════════════════════════ -->
-<div class="sec-title">Recurring Installments — "Ward 1 Community Enhancement Initiative" <span class="interact-hint" style="float:right;text-transform:none;letter-spacing:0;font-size:0.68rem"><span class="hint-icon" style="background:var(--red-bg);border-color:var(--red-border);color:var(--red)">!</span> Red tags indicate flagged patterns</span></div>
-
-<div class="inst-stack">
-  <div class="inst-fy">Fiscal Year 2025</div>
-  <div class="inst-row">
-    <div class="inst-date">May 19, 2025</div>
-    <div class="inst-desc">Ward 1 Community Enhancement Initiative <div><span class="tag tag-red">No Scope Defined</span><span class="tag tag-gray">Charged to Different Account</span></div></div>
-    <div class="inst-amount">$40,000</div>
-  </div>
-  <div class="inst-row">
-    <div class="inst-date">Aug 1, 2025</div>
-    <div class="inst-desc">2nd Installment — Ward 1 Enhancement <div><span class="tag tag-red">Installment Payment</span><span class="tag tag-gray">Charged to Different Account</span></div></div>
-    <div class="inst-amount">$10,000</div>
-  </div>
-
-  <div class="inst-fy">Fiscal Year 2026 — <span class="flagged">Cycle Restarts</span></div>
-  <div class="inst-row">
-    <div class="inst-date">Sep 25, 2025</div>
-    <div class="inst-desc">2nd Installment — Ward 1 Enhancement (FY26) <div><span class="tag tag-red">Restarted Fiscal Cycle</span><span class="tag tag-red">Installment Payment</span></div></div>
-    <div class="inst-amount">$10,000</div>
-  </div>
-  <div class="inst-row">
-    <div class="inst-date">Dec 1, 2025</div>
-    <div class="inst-desc">3rd Installment — Ward 1 Enhancement <div><span class="tag tag-red">Installment Payment</span></div></div>
-    <div class="inst-amount">$10,000</div>
-  </div>
-  <div class="inst-row">
-    <div class="inst-date">Dec 12, 2025</div>
-    <div class="inst-desc">4th Installment — Ward 1 Enhancement <div><span class="tag tag-red">Installment Payment</span></div></div>
-    <div class="inst-amount">$10,000</div>
-  </div>
-  <div class="inst-footer">
-    <strong>$80,000</strong> across 5 installment payments over 2 fiscal years — all for the same initiative, all to Destination College Park, all from Ward 1 funds under Councilwoman McKenzie's control. The installment numbering restarted in FY26 with a new purchase order.
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════
-     4. SOURCE DOCUMENTATION — Invoices
-     ══════════════════════════════════════════════════ -->
-<div class="sec-title">Source Documentation — All Invoices <span class="interact-hint" style="float:right;text-transform:none;letter-spacing:0;font-size:0.68rem"><span class="hint-icon">&#9756;</span> Filter by category, then expand tables below</span></div>
+<div class="sec-title">Source Documentation — All Invoices <span class="interact-hint" style="float:right;text-transform:none;letter-spacing:0;font-size:0.68rem"><span class="hint-icon">&#9756;</span> Use filters to narrow by category</span></div>
 
 <div class="filter-row">
   <button class="pill active" onclick="filterTable('all',this)">All Payments</button>
@@ -278,11 +239,11 @@
 
 <!-- Destination College Park -->
 <div class="collapsible">
-  <div class="col-header" onclick="toggle(this)">
+  <div class="col-header open" onclick="toggle(this)">
     <span class="title">Destination College Park — 8 invoices · $98,436</span>
-    <span style="display:flex;align-items:center;gap:8px"><span style="font-size:0.62rem;color:var(--text3);font-weight:600">Click to expand</span><span class="arrow">▼</span></span>
+    <span style="display:flex;align-items:center;gap:8px"><span style="font-size:0.62rem;color:var(--text3);font-weight:600">Click to collapse</span><span class="arrow">▼</span></span>
   </div>
-  <div class="col-body" id="dcp-body">
+  <div class="col-body open" id="dcp-body">
     <table><thead><tr><th>Date Paid</th><th>Description &amp; Flags</th><th>Source</th><th class="amt">Amount</th></tr></thead>
     <tbody id="dcpRows"></tbody></table>
   </div>
@@ -290,11 +251,11 @@
 
 <!-- Historical Society -->
 <div class="collapsible">
-  <div class="col-header" onclick="toggle(this)">
+  <div class="col-header open" onclick="toggle(this)">
     <span class="title">College Park Historical Society — 2 invoices · $128,500</span>
-    <span style="display:flex;align-items:center;gap:8px"><span style="font-size:0.62rem;color:var(--text3);font-weight:600">Click to expand</span><span class="arrow">▼</span></span>
+    <span style="display:flex;align-items:center;gap:8px"><span style="font-size:0.62rem;color:var(--text3);font-weight:600">Click to collapse</span><span class="arrow">▼</span></span>
   </div>
-  <div class="col-body" id="hist-body">
+  <div class="col-body open" id="hist-body">
     <table><thead><tr><th>Date Paid</th><th>Description &amp; Flags</th><th>Source</th><th class="amt">Amount</th></tr></thead>
     <tbody id="histRows"></tbody></table>
   </div>
